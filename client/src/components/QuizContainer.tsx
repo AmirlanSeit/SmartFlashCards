@@ -16,33 +16,34 @@ export function QuizContainer() {
   const [selectedOption, setSelectedOption] = useState<string | null>(null);
   const [showHint, setShowHint] = useState(false);
 
-  const { data: quizQuestions = [], isLoading: isLoadingQuestions } = useQuery<QuizQuestionWithOptions[]>({
-    queryKey: ["/api/quiz"],
-  });
-
+  // Get the selected topic ID based on the slug
   const { data: topics = [] } = useQuery<Topic[]>({
     queryKey: ["/api/topics"],
   });
+  
+  // Find the topic ID from the selected topic slug
+  const selectedTopicId = selectedTopic !== "all" 
+    ? topics.find(t => t.slug === selectedTopic)?.id 
+    : undefined;
+  
+  // Fetch quiz questions with dynamic query key based on selected topic
+  const { data: quizQuestions = [], isLoading: isLoadingQuestions } = useQuery<QuizQuestionWithOptions[]>({
+    queryKey: selectedTopicId 
+      ? ["/api/quiz", `topicId=${selectedTopicId}`] 
+      : ["/api/quiz"],
+  });
 
   useEffect(() => {
-    // Filter questions based on selected topic
-    if (selectedTopic === "all") {
-      setAllQuestions(quizQuestions);
-    } else {
-      const selectedTopicId = topics.find(t => t.slug === selectedTopic)?.id;
-      if (selectedTopicId) {
-        setAllQuestions(quizQuestions.filter(q => q.topicId === selectedTopicId));
-      } else {
-        setAllQuestions([]);
-      }
-    }
+    // Update all questions directly from the query
+    setAllQuestions(quizQuestions);
+    
     // Reset index and states when topic changes
     setCurrentIndex(0);
     setUserAnswer("");
     setShowAnswer(false);
     setSelectedOption(null);
     setShowHint(false);
-  }, [selectedTopic, quizQuestions, topics]);
+  }, [selectedTopic, quizQuestions]);
 
   if (currentMode !== "quiz") {
     return null;

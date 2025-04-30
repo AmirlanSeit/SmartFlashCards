@@ -49,15 +49,27 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Get all flashcards
+  // Get all flashcards or filter by topic
   apiRouter.get("/flashcards", async (req: Request, res: Response) => {
     try {
       let flashcards;
       if (req.query.topicId) {
-        const topicId = parseInt(req.query.topicId as string);
+        // Extract the topicId from the query string - it could be in different formats
+        let topicIdValue = req.query.topicId;
+        if (typeof topicIdValue === 'string' && topicIdValue.startsWith('topicId=')) {
+          topicIdValue = topicIdValue.replace('topicId=', '');
+        }
+        const topicId = parseInt(topicIdValue as string);
+        
+        if (isNaN(topicId)) {
+          return res.status(400).json({ message: "Invalid topicId parameter" });
+        }
+        
         flashcards = await storage.getFlashcardsByTopic(topicId);
+        console.log(`Fetched ${flashcards.length} flashcards for topic ${topicId}`);
       } else {
         flashcards = await storage.getAllFlashcards();
+        console.log(`Fetched all ${flashcards.length} flashcards`);
       }
       res.json(flashcards);
     } catch (error) {
@@ -94,15 +106,27 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Get all quiz questions
+  // Get all quiz questions or filter by topic
   apiRouter.get("/quiz", async (req: Request, res: Response) => {
     try {
       let quizQuestions;
       if (req.query.topicId) {
-        const topicId = parseInt(req.query.topicId as string);
+        // Extract the topicId from the query string - it could be in different formats
+        let topicIdValue = req.query.topicId;
+        if (typeof topicIdValue === 'string' && topicIdValue.startsWith('topicId=')) {
+          topicIdValue = topicIdValue.replace('topicId=', '');
+        }
+        const topicId = parseInt(topicIdValue as string);
+        
+        if (isNaN(topicId)) {
+          return res.status(400).json({ message: "Invalid topicId parameter" });
+        }
+        
         quizQuestions = await storage.getQuizQuestionsByTopic(topicId);
+        console.log(`Fetched ${quizQuestions.length} quiz questions for topic ${topicId}`);
       } else {
         quizQuestions = await storage.getAllQuizQuestions();
+        console.log(`Fetched all ${quizQuestions.length} quiz questions`);
       }
       res.json(quizQuestions);
     } catch (error) {

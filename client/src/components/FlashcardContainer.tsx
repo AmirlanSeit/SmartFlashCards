@@ -12,31 +12,32 @@ export function FlashcardContainer() {
   const [allFlashcards, setAllFlashcards] = useState<Flashcard[]>([]);
   const [showHint, setShowHint] = useState(false);
 
-  const { data: flashcards = [], isLoading: isLoadingFlashcards } = useQuery<Flashcard[]>({
-    queryKey: ["/api/flashcards"],
-  });
-
+  // Get the selected topic ID based on the slug
   const { data: topics = [] } = useQuery<Topic[]>({
     queryKey: ["/api/topics"],
   });
+  
+  // Find the topic ID from the selected topic slug
+  const selectedTopicId = selectedTopic !== "all" 
+    ? topics.find(t => t.slug === selectedTopic)?.id 
+    : undefined;
+
+  // Fetch flashcards with dynamic query key based on selected topic
+  const { data: flashcards = [], isLoading: isLoadingFlashcards } = useQuery<Flashcard[]>({
+    queryKey: selectedTopicId 
+      ? ["/api/flashcards", `topicId=${selectedTopicId}`] 
+      : ["/api/flashcards"],
+  });
 
   useEffect(() => {
-    // Filter flashcards based on selected topic
-    if (selectedTopic === "all") {
-      setAllFlashcards(flashcards);
-    } else {
-      const selectedTopicId = topics.find(t => t.slug === selectedTopic)?.id;
-      if (selectedTopicId) {
-        setAllFlashcards(flashcards.filter(f => f.topicId === selectedTopicId));
-      } else {
-        setAllFlashcards([]);
-      }
-    }
+    // Update all flashcards directly from the query
+    setAllFlashcards(flashcards);
+    
     // Reset index and flip state when topic changes
     setCurrentIndex(0);
     setIsFlipped(false);
     setShowHint(false);
-  }, [selectedTopic, flashcards, topics]);
+  }, [selectedTopic, flashcards]);
 
   if (currentMode !== "flashcards") {
     return null;
@@ -116,9 +117,9 @@ export function FlashcardContainer() {
               dangerouslySetInnerHTML={{ __html: formatMath(currentCard?.answer || "") }}
             />
             
-            {showHint && (
+            {showHint && currentCard.hint && (
               <div className="hint-box mt-4 w-full">
-                <strong>Hint:</strong> In a 30-60-90 triangle, the side opposite to the 30° angle is half the hypotenuse.
+                <strong>Hint:</strong> {currentCard.hint}
               </div>
             )}
           </div>
