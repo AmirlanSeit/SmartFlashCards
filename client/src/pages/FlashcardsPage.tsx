@@ -119,13 +119,13 @@ export default function FlashcardsPage() {
         
         <div className={`flip-card mb-4 ${isFlipped ? 'flipped' : ''}`}>
           <div className="flip-card-inner">
-            <Card className="flip-card-front flex items-center justify-center min-h-[240px]">
-              <CardContent className="text-center text-xl p-6">
+            <div className="flip-card-front flex flex-col items-center justify-center p-6">
+              <div className="text-center text-xl">
                 {currentCard.question}
-              </CardContent>
-            </Card>
+              </div>
+            </div>
             
-            <Card className="flip-card-back flex flex-col items-center justify-center min-h-[240px]">
+            <div className="flip-card-back flex flex-col items-center justify-center p-6">
               <div className="text-gray-500 text-sm mb-4">Answer</div>
               <div className="text-xl text-center text-green-600">
                 {currentCard.answer}
@@ -136,7 +136,7 @@ export default function FlashcardsPage() {
                   <strong>Hint:</strong> {currentCard.hint}
                 </div>
               )}
-            </Card>
+            </div>
           </div>
         </div>
         
