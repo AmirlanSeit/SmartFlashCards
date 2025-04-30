@@ -3,8 +3,12 @@ import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { z } from "zod";
 import { insertFlashcardSchema, insertQuizQuestionSchema, insertTopicSchema } from "@shared/schema";
+import { setupAuth } from "./auth";
 
 export async function registerRoutes(app: Express): Promise<Server> {
+  // Set up authentication system
+  setupAuth(app);
+  
   const apiRouter = express.Router();
 
   // Get all topics
