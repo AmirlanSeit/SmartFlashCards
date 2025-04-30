@@ -17,7 +17,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const topics = await storage.getAllTopics();
       res.json(topics);
     } catch (error) {
-      res.status(500).json({ message: "Failed to fetch topics" });
+      console.error("Error fetching topics:", error);
+      res.status(500).json({ message: "Failed to fetch topics", error: String(error) });
     }
   });
 
@@ -60,7 +61,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
       res.json(flashcards);
     } catch (error) {
-      res.status(500).json({ message: "Failed to fetch flashcards" });
+      console.error("Error fetching flashcards:", error);
+      res.status(500).json({ message: "Failed to fetch flashcards", error: String(error) });
     }
   });
 
@@ -104,7 +106,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
       res.json(quizQuestions);
     } catch (error) {
-      res.status(500).json({ message: "Failed to fetch quiz questions" });
+      console.error("Error fetching quiz questions:", error);
+      res.status(500).json({ message: "Failed to fetch quiz questions", error: String(error) });
     }
   });
 
