@@ -83,6 +83,7 @@ export async function seedDatabase() {
     // Create quiz questions
     console.log('Creating quiz questions...');
     const quizItems: InsertQuizQuestion[] = [
+      // Trigonometry questions
       {
         question: "What is sin(30°)?",
         correctAnswer: "1/2",
@@ -93,31 +94,8 @@ export async function seedDatabase() {
           { id: "D", text: "1", correct: false }
         ] as unknown as Option[],
         topicId: topicMap.get("Trigonometry")!,
-        difficulty: "easy"
-      },
-      {
-        question: "Solve 2x+3=7. x=?",
-        correctAnswer: "2",
-        options: [
-          { id: "A", text: "1", correct: false },
-          { id: "B", text: "2", correct: true },
-          { id: "C", text: "3", correct: false },
-          { id: "D", text: "4", correct: false }
-        ] as unknown as Option[],
-        topicId: topicMap.get("Algebra")!,
-        difficulty: "easy"
-      },
-      {
-        question: "Mean of [2,4,6,8] is?",
-        correctAnswer: "5",
-        options: [
-          { id: "A", text: "4", correct: false },
-          { id: "B", text: "5", correct: true },
-          { id: "C", text: "6", correct: false },
-          { id: "D", text: "7", correct: false }
-        ] as unknown as Option[],
-        topicId: topicMap.get("Statistics")!,
-        difficulty: "easy"
+        difficulty: "easy",
+        hint: "In a 30-60-90 triangle, the side opposite to the 30° angle is half the hypotenuse."
       },
       {
         question: "What is cos(60°)?",
@@ -129,7 +107,49 @@ export async function seedDatabase() {
           { id: "D", text: "0", correct: false }
         ] as unknown as Option[],
         topicId: topicMap.get("Trigonometry")!,
-        difficulty: "medium"
+        difficulty: "medium",
+        hint: "In a 30-60-90 triangle, the adjacent side to the 60° angle is half the hypotenuse."
+      },
+      {
+        question: "What is tan(45°)?",
+        correctAnswer: "1",
+        options: [
+          { id: "A", text: "0", correct: false },
+          { id: "B", text: "1", correct: true },
+          { id: "C", text: "√2", correct: false },
+          { id: "D", text: "√3", correct: false }
+        ] as unknown as Option[],
+        topicId: topicMap.get("Trigonometry")!,
+        difficulty: "easy",
+        hint: "In a 45-45-90 triangle, the opposite and adjacent sides are equal."
+      },
+      {
+        question: "sin²θ + cos²θ = ?",
+        correctAnswer: "1",
+        options: [
+          { id: "A", text: "0", correct: false },
+          { id: "B", text: "1", correct: true },
+          { id: "C", text: "2", correct: false },
+          { id: "D", text: "θ", correct: false }
+        ] as unknown as Option[],
+        topicId: topicMap.get("Trigonometry")!,
+        difficulty: "medium",
+        hint: "This is the Pythagorean identity in trigonometry."
+      },
+      
+      // Algebra questions
+      {
+        question: "Solve 2x+3=7. x=?",
+        correctAnswer: "2",
+        options: [
+          { id: "A", text: "1", correct: false },
+          { id: "B", text: "2", correct: true },
+          { id: "C", text: "3", correct: false },
+          { id: "D", text: "4", correct: false }
+        ] as unknown as Option[],
+        topicId: topicMap.get("Algebra")!,
+        difficulty: "easy",
+        hint: "Subtract 3 from both sides, then divide by 2."
       },
       {
         question: "Solve x²-9=0. x=?",
@@ -141,7 +161,88 @@ export async function seedDatabase() {
           { id: "D", text: "±9", correct: false }
         ] as unknown as Option[],
         topicId: topicMap.get("Algebra")!,
-        difficulty: "medium"
+        difficulty: "medium",
+        hint: "Factor the equation as (x+3)(x-3)=0."
+      },
+      {
+        question: "Factor x²-4x+4",
+        correctAnswer: "(x-2)²",
+        options: [
+          { id: "A", text: "(x-2)²", correct: true },
+          { id: "B", text: "(x+2)²", correct: false },
+          { id: "C", text: "(x-2)(x-2)", correct: true },
+          { id: "D", text: "(x+2)(x-2)", correct: false }
+        ] as unknown as Option[],
+        topicId: topicMap.get("Algebra")!,
+        difficulty: "medium",
+        hint: "This is a perfect square trinomial."
+      },
+      {
+        question: "Solve 5x-2=13. x=?",
+        correctAnswer: "3",
+        options: [
+          { id: "A", text: "2", correct: false },
+          { id: "B", text: "3", correct: true },
+          { id: "C", text: "4", correct: false },
+          { id: "D", text: "5", correct: false }
+        ] as unknown as Option[],
+        topicId: topicMap.get("Algebra")!,
+        difficulty: "easy",
+        hint: "Add 2 to both sides, then divide by 5."
+      },
+      
+      // Statistics questions
+      {
+        question: "Mean of [2,4,6,8] is?",
+        correctAnswer: "5",
+        options: [
+          { id: "A", text: "4", correct: false },
+          { id: "B", text: "5", correct: true },
+          { id: "C", text: "6", correct: false },
+          { id: "D", text: "7", correct: false }
+        ] as unknown as Option[],
+        topicId: topicMap.get("Statistics")!,
+        difficulty: "easy",
+        hint: "Add all numbers and divide by the count of numbers."
+      },
+      {
+        question: "Median of [1,3,5,7,9] is?",
+        correctAnswer: "5",
+        options: [
+          { id: "A", text: "3", correct: false },
+          { id: "B", text: "5", correct: true },
+          { id: "C", text: "6", correct: false },
+          { id: "D", text: "7", correct: false }
+        ] as unknown as Option[],
+        topicId: topicMap.get("Statistics")!,
+        difficulty: "easy",
+        hint: "The median is the middle value in an ordered list of numbers."
+      },
+      {
+        question: "Standard deviation is?",
+        correctAnswer: "Square root of variance",
+        options: [
+          { id: "A", text: "Mean of deviations", correct: false },
+          { id: "B", text: "Square root of variance", correct: true },
+          { id: "C", text: "Square of variance", correct: false },
+          { id: "D", text: "Difference between max and min", correct: false }
+        ] as unknown as Option[],
+        topicId: topicMap.get("Statistics")!,
+        difficulty: "medium",
+        hint: "Variance measures squared deviations from the mean."
+      },
+      {
+        question: "Range of [3,7,2,9,5] is?",
+        correctAnswer: "7",
+        options: [
+          { id: "A", text: "5", correct: false },
+          { id: "B", text: "6", correct: false },
+          { id: "C", text: "7", correct: true },
+          { id: "D", text: "9", correct: false }
+        ] as unknown as Option[],
+        topicId: topicMap.get("Statistics")!,
+        difficulty: "easy",
+        hint: "Range is the difference between the largest and smallest values."
       }
     ];
     
