@@ -1,8 +1,23 @@
 import { useContext } from "react";
 import { AppContext } from "@/context/AppContext";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export function TopicSelector() {
-  const { selectedTopic, setSelectedTopic, topics } = useContext(AppContext);
+  const { selectedTopic, setSelectedTopic, topics, isLoading } = useContext(AppContext);
+
+  // Show skeleton loading state
+  if (isLoading) {
+    return (
+      <section className="mb-6">
+        <h2 className="text-xl font-semibold mb-3 text-gray-800 dark:text-gray-200">Select Math Topic</h2>
+        <div className="flex flex-wrap gap-2">
+          <Skeleton className="h-9 w-[100px] rounded-full" />
+          <Skeleton className="h-9 w-[120px] rounded-full" />
+          <Skeleton className="h-9 w-[140px] rounded-full" />
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section className="mb-6">

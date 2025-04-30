@@ -48,7 +48,9 @@ export default function QuizPage() {
     ? quizQuestions 
     : quizQuestions.filter(question => {
         const topic = topics.find(t => t.slug === selectedTopic);
-        return question.topicId === topic?.id;
+        // Add debugging
+        console.log('Quiz - Selected topic:', selectedTopic, 'Topic found:', topic, 'Question topicId:', question.topicId);
+        return topic ? question.topicId === topic.id : false;
       });
   
   // Reset state when changing topics or question type
