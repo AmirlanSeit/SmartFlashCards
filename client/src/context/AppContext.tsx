@@ -1,4 +1,4 @@
-import { createContext, useState, ReactNode } from "react";
+import { createContext, useState, useEffect, ReactNode } from "react";
 
 type Mode = "flashcards" | "quiz";
 type QuestionType = "multiple" | "typed";
@@ -19,6 +19,7 @@ interface AppContextType {
   selectedTopic: Topic;
   setSelectedTopic: (topic: Topic) => void;
   topics: TopicData[];
+  isLoading: boolean;
 }
 
 export const AppContext = createContext<AppContextType>({
@@ -28,7 +29,8 @@ export const AppContext = createContext<AppContextType>({
   setQuestionType: () => {},
   selectedTopic: "all",
   setSelectedTopic: () => {},
-  topics: []
+  topics: [],
+  isLoading: true
 });
 
 interface AppProviderProps {
@@ -39,13 +41,22 @@ export function AppProvider({ children }: AppProviderProps) {
   const [currentMode, setCurrentMode] = useState<Mode>("flashcards");
   const [questionType, setQuestionType] = useState<QuestionType>("multiple");
   const [selectedTopic, setSelectedTopic] = useState<Topic>("all");
+  const [topics, setTopics] = useState<TopicData[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
   
-  // Mock topics data (in a real app, this would come from an API)
-  const topics: TopicData[] = [
-    { id: 1, name: 'Algebra', slug: 'algebra', difficulty: 'medium' },
-    { id: 2, name: 'Trigonometry', slug: 'trigonometry', difficulty: 'medium' },
-    { id: 3, name: 'Statistics', slug: 'statistics', difficulty: 'medium' }
-  ];
+  useEffect(() => {
+    // Fetch topics from the API
+    fetch('/api/topics')
+      .then(response => response.json())
+      .then(data => {
+        setTopics(data);
+        setIsLoading(false);
+      })
+      .catch(error => {
+        console.error('Error fetching topics:', error);
+        setIsLoading(false);
+      });
+  }, []);
 
   return (
     <AppContext.Provider
@@ -56,7 +67,8 @@ export function AppProvider({ children }: AppProviderProps) {
         setQuestionType,
         selectedTopic,
         setSelectedTopic,
-        topics
+        topics,
+        isLoading
       }}
     >
       {children}

@@ -38,7 +38,9 @@ export default function FlashcardsPage() {
     ? flashcards 
     : flashcards.filter(card => {
         const topic = topics.find(t => t.slug === selectedTopic);
-        return card.topicId === topic?.id;
+        // Add debugging
+        console.log('Selected topic:', selectedTopic, 'Topic found:', topic, 'Card topicId:', card.topicId);
+        return topic ? card.topicId === topic.id : false;
       });
   
   // Reset state when changing topics
