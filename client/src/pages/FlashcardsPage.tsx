@@ -122,19 +122,23 @@ export default function FlashcardsPage() {
         <div className={`flip-card mb-4 ${isFlipped ? 'flipped' : ''}`}>
           <div className="flip-card-inner">
             <div className="flip-card-front flex flex-col items-center justify-center p-6">
+              <div className="text-gray-500 text-sm mb-4 uppercase tracking-wider font-medium">Question</div>
               <div className="text-center text-xl">
                 {currentCard.question}
+              </div>
+              <div className="absolute top-3 right-3 px-2 py-1 text-xs font-semibold rounded-full bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-100">
+                {topics.find(t => t.id === currentCard.topicId)?.name || "Math"}
               </div>
             </div>
             
             <div className="flip-card-back flex flex-col items-center justify-center p-6">
-              <div className="text-gray-500 text-sm mb-4">Answer</div>
+              <div className="text-gray-500 text-sm mb-4 uppercase tracking-wider">Answer</div>
               <div className="text-xl text-center text-green-600">
                 {currentCard.answer}
               </div>
               
               {showHint && currentCard.hint && (
-                <div className="hint-box mt-4 w-full">
+                <div className="hint-box mt-6 w-full">
                   <strong>Hint:</strong> {currentCard.hint}
                 </div>
               )}

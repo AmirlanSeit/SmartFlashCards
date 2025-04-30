@@ -13,11 +13,11 @@
   --card-foreground: 20 14.3% 4.1%;
   --border: 20 5.9% 90%;
   --input: 20 5.9% 90%;
-  --primary: 230 75% 58%;
+  --primary: 215 80% 50%;
   --primary-foreground: 211 100% 99%;
   --secondary: 60 4.8% 95.9%;
   --secondary-foreground: 24 9.8% 10%;
-  --accent: 60 4.8% 95.9%;
+  --accent: 221 83% 53%;
   --accent-foreground: 24 9.8% 10%;
   --destructive: 0 84.2% 60.2%;
   --destructive-foreground: 60 9.1% 97.8%;
@@ -28,27 +28,27 @@
 }
 
 .dark {
-  --background: 240 10% 3.9%;
-  --foreground: 0 0% 98%;
-  --muted: 240 3.7% 15.9%;
-  --muted-foreground: 240 5% 64.9%;
-  --popover: 240 10% 3.9%;
-  --popover-foreground: 0 0% 98%;
-  --card: 240 10% 3.9%;
-  --card-foreground: 0 0% 98%;
-  --border: 240 3.7% 15.9%;
-  --input: 240 3.7% 15.9%;
-  --primary: 230 75% 58%;
-  --primary-foreground: 211 100% 99%;
-  --secondary: 240 3.7% 15.9%;
-  --secondary-foreground: 0 0% 98%;
-  --accent: 240 3.7% 15.9%;
-  --accent-foreground: 0 0% 98%;
+  --background: 220 15% 12%;
+  --foreground: 210 40% 98%;
+  --muted: 217 19% 22%;
+  --muted-foreground: 215 20% 75%;
+  --popover: 220 15% 16%;
+  --popover-foreground: 210 40% 98%;
+  --card: 220 25% 16%;
+  --card-foreground: 210 40% 98%;
+  --border: 217 19% 27%;
+  --input: 217 19% 27%;
+  --primary: 222 85% 60%;
+  --primary-foreground: 210 40% 98%;
+  --secondary: 217 19% 27%;
+  --secondary-foreground: 210 40% 98%;
+  --accent: 221 83% 53%;
+  --accent-foreground: 210 40% 98%;
   --destructive: 0 62.8% 30.6%;
-  --destructive-foreground: 0 0% 98%;
+  --destructive-foreground: 210 40% 98%;
   --success: 142 76% 36%;
-  --success-foreground: 0 0% 100%;
-  --ring: 240 4.9% 83.9%;
+  --success-foreground: 210 40% 98%;
+  --ring: 217 19% 27%;
   --radius: 1rem;
 }
 
@@ -66,11 +66,13 @@
 .flip-card {
   perspective: 1000px;
   position: relative;
-  height: 240px;
+  height: 300px;
   width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
 }
 .flip-card-inner {
-  transition: transform 0.6s;
+  transition: transform 0.7s cubic-bezier(0.23, 1, 0.32, 1);
   transform-style: preserve-3d;
   position: relative;
   width: 100%;
@@ -87,16 +89,40 @@
   width: 100%;
   height: 100%;
   border-radius: var(--radius);
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 2rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 .flip-card-front {
   background-color: hsl(var(--card));
   color: hsl(var(--card-foreground));
+  background-image: linear-gradient(135deg, rgba(59, 130, 246, 0.05) 0%, rgba(147, 51, 234, 0.05) 100%);
+}
+.dark .flip-card-front {
+  background-image: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(139, 92, 246, 0.1) 100%);
 }
 .flip-card-back {
   background-color: hsl(var(--card));
   color: hsl(var(--card-foreground));
   transform: rotateY(180deg);
+  background-image: linear-gradient(135deg, rgba(16, 185, 129, 0.05) 0%, rgba(59, 130, 246, 0.05) 100%);
+}
+.dark .flip-card-back {
+  background-image: linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(59, 130, 246, 0.1) 100%);
+}
+.flip-card-front .text-center {
+  font-size: 1.5rem;
+  font-weight: 500;
+  line-height: 1.4;
+  max-width: 90%;
+}
+.flip-card-back .text-xl {
+  font-size: 1.5rem;
+  font-weight: 600;
 }
 
 /* Fade in animation */
@@ -130,18 +156,34 @@
   border-radius: 9999px;
   font-weight: 500;
   transition: all 0.2s;
+  padding: 0.5rem 1.25rem;
+  font-size: 0.875rem;
+  letter-spacing: 0.01em;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 .topic-btn-active {
   background-color: hsl(var(--primary));
   color: hsl(var(--primary-foreground));
+  box-shadow: 0 2px 5px rgba(13, 71, 161, 0.3);
+  transform: translateY(-1px);
+}
+.dark .topic-btn:not(.topic-btn-active) {
+  background-color: hsl(var(--card));
+  color: hsl(var(--card-foreground));
+  border: 1px solid hsl(var(--border));
 }
 .topic-btn:not(.topic-btn-active) {
   background-color: white;
   color: #333;
   border: 1px solid #e5e7eb;
 }
+.dark .topic-btn:hover:not(.topic-btn-active) {
+  background-color: hsl(var(--accent));
+  border-color: hsl(var(--accent-foreground));
+}
 .topic-btn:hover:not(.topic-btn-active) {
   background-color: #f9fafb;
+  transform: translateY(-1px);
 }
 
 /* Mode toggle buttons */
@@ -187,12 +229,27 @@
 
 /* Hint styles */
 .hint-box {
-  background-color: #eff6ff;
-  border-radius: 0.375rem;
-  padding: 0.75rem;
+  background-color: rgba(59, 130, 246, 0.1);
+  border-radius: 0.5rem;
+  padding: 0.875rem;
   margin-top: 1rem;
   margin-bottom: 1rem;
-  color: #1e40af;
+  color: hsl(var(--primary));
+  border-left: 3px solid hsl(var(--primary));
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.dark .hint-box {
+  background-color: rgba(59, 130, 246, 0.15);
+  color: hsl(210, 100%, 80%);
+  border-left: 3px solid hsl(var(--primary));
+}
+
+.hint-box strong {
+  font-weight: 600;
+  margin-right: 0.25rem;
 }
 
 /* Quiz options */
@@ -201,18 +258,36 @@
   align-items: center;
   width: 100%;
   text-align: left;
-  padding: 0.75rem 1rem;
-  border: 1px solid #e5e7eb;
-  border-radius: 0.375rem;
-  margin-bottom: 0.5rem;
+  padding: 0.875rem 1.25rem;
+  border: 1px solid hsl(var(--border));
+  border-radius: 0.5rem;
+  margin-bottom: 0.625rem;
   transition: all 0.2s;
   cursor: pointer;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  font-size: 1rem;
 }
+
+.dark .quiz-option {
+  background-color: hsl(var(--card));
+  border: 1px solid hsl(var(--border));
+}
+
 .quiz-option:hover:not(.option-selected) {
-  background-color: #f9fafb;
+  background-color: rgba(59, 130, 246, 0.05);
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.dark .quiz-option:hover:not(.option-selected) {
+  background-color: hsl(var(--accent));
 }
 
 .correct-answer {
-  color: #16a34a;
+  color: hsl(142, 76%, 36%);
   font-weight: 600;
+}
+
+.dark .correct-answer {
+  color: hsl(142, 71%, 60%);
 }
