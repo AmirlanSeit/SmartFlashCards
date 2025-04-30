@@ -31,7 +31,7 @@ type QuizQuestion = {
 };
 
 export default function QuizPage() {
-  const { selectedTopic, questionType, setQuestionType } = useContext(AppContext);
+  const { selectedTopic, questionType, setQuestionType, topics } = useContext(AppContext);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [selectedOption, setSelectedOption] = useState<string | null>(null);
   const [userAnswer, setUserAnswer] = useState('');
@@ -112,13 +112,6 @@ export default function QuizPage() {
       : 'border-red-500 text-red-600';
   };
   
-  // Mock topics data (should be fetched from API in production)
-  const topics = [
-    { id: 1, name: 'Algebra', slug: 'algebra', difficulty: 'medium' },
-    { id: 2, name: 'Trigonometry', slug: 'trigonometry', difficulty: 'medium' },
-    { id: 3, name: 'Statistics', slug: 'statistics', difficulty: 'medium' }
-  ];
-  
   // Get current topic name for display
   const currentTopicName = selectedTopic === 'all' 
     ? 'All Topics' 
@@ -128,20 +121,10 @@ export default function QuizPage() {
     return (
       <div className="container mx-auto px-4 py-8">
         <h1 className="text-3xl font-bold mb-4">Math Quiz</h1>
-        
-        <Tabs defaultValue={questionType} onValueChange={(value) => setQuestionType(value as 'multiple' | 'typed')}>
-          <TabsList className="mb-4">
-            <TabsTrigger value="multiple">Multiple Choice</TabsTrigger>
-            <TabsTrigger value="typed">Type Answer</TabsTrigger>
-          </TabsList>
-        </Tabs>
-        
         <TopicSelector />
-        
         <Card className="mt-6 p-8 flex justify-center items-center">
           <p className="text-center text-gray-500">No quiz questions available for this topic.</p>
         </Card>
-        
         <div className="mt-6">
           <Button asChild>
             <Link href="/">Back to Home</Link>
@@ -155,100 +138,148 @@ export default function QuizPage() {
     <div className="container mx-auto px-4 py-8">
       <h1 className="text-3xl font-bold mb-4">Math Quiz</h1>
       
-      <Tabs defaultValue={questionType} onValueChange={(value) => setQuestionType(value as 'multiple' | 'typed')}>
-        <TabsList className="mb-4">
-          <TabsTrigger value="multiple">Multiple Choice</TabsTrigger>
-          <TabsTrigger value="typed">Type Answer</TabsTrigger>
-        </TabsList>
-      </Tabs>
-      
       <TopicSelector />
       
-      <div className="my-6">
-        <div className="flex justify-between items-center mb-4">
-          <div className="text-sm text-gray-500">
-            {(currentIndex % filteredQuestions.length) + 1} of {filteredQuestions.length}
-          </div>
-          <div className="bg-primary-500 text-white px-3 py-1 rounded-full text-sm">
-            {currentTopicName}
-          </div>
-        </div>
-        
-        <Card className="mb-4 animate-slide-in">
-          <CardContent className="p-6">
-            <div className="text-gray-500 text-sm mb-4">Question:</div>
-            <div className="text-xl text-center mb-8">
-              {currentQuestion.question}
-            </div>
-            
-            {/* Multiple Choice Options */}
-            {questionType === 'multiple' && (
-              <div className="flex flex-col gap-3">
-                {currentQuestion.options.map((option) => (
-                  <Button
-                    key={option.id}
-                    variant="outline"
-                    className={`justify-start px-4 py-3 text-left ${getOptionColor(option)}`}
-                    onClick={() => handleOptionSelect(option.id)}
-                    disabled={selectedOption !== null}
-                  >
-                    <span className="font-medium mr-3">{option.id}</span>
-                    <span>{option.text}</span>
-                  </Button>
-                ))}
-              </div>
-            )}
-            
-            {/* Type Answer Input */}
-            {questionType === 'typed' && (
-              <form onSubmit={handleSubmitTypedAnswer}>
-                <Input
-                  value={userAnswer}
-                  onChange={(e) => setUserAnswer(e.target.value)}
-                  placeholder="Type your answer here..."
-                  className={getAnswerColor()}
-                  disabled={showAnswer}
-                />
-                
-                {showAnswer && userAnswer.toLowerCase() !== currentQuestion.correctAnswer.toLowerCase() && (
-                  <div className="text-center text-sm my-2">
-                    Correct answer: <span className="font-bold">{currentQuestion.correctAnswer}</span>
-                  </div>
-                )}
-                
-                <Button
-                  type="submit"
-                  className="w-full mt-3"
-                  disabled={showAnswer || !userAnswer.trim()}
-                >
-                  Submit Answer
-                </Button>
-              </form>
-            )}
-            
-            {/* Hint box */}
-            {showHint && currentQuestion.hint && (
-              <div className="hint-box mt-4">
-                <strong>Hint:</strong> {currentQuestion.hint}
-              </div>
-            )}
-          </CardContent>
-        </Card>
-        
-        <div className="flex justify-between items-center">
-          <Button variant="outline" onClick={toggleHint}>
-            {showHint ? "Hide Hint" : "Hint"}
-          </Button>
+      <div className="mt-6 mb-6">
+        <Tabs defaultValue={questionType} className="w-full" onValueChange={(val) => setQuestionType(val as 'multiple' | 'typed')}>
+          <TabsList className="grid w-full grid-cols-2">
+            <TabsTrigger value="multiple">Multiple Choice</TabsTrigger>
+            <TabsTrigger value="typed">Typed Answer</TabsTrigger>
+          </TabsList>
           
-          <Button onClick={nextQuestion}>
-            Next Question
-          </Button>
-        </div>
-        
-        <Progress value={progressPercentage} className="mt-6" />
-        <div className="text-xs text-gray-500 text-center mt-1">
-          {Math.round(progressPercentage)}% complete
-        </div>
+          <TabsContent value="multiple" className="animate-slide-in">
+            <Card className="mt-4">
+              <CardContent className="pt-6">
+                <div className="flex justify-between items-center mb-4">
+                  <div className="text-sm text-gray-500">
+                    {(currentIndex % filteredQuestions.length) + 1} of {filteredQuestions.length}
+                  </div>
+                  <div className="bg-primary-500 text-white px-3 py-1 rounded-full text-sm">
+                    {currentTopicName}
+                  </div>
+                </div>
+                
+                <div className="question mb-6">
+                  <h2 className="text-xl font-medium mb-4">{currentQuestion.question}</h2>
+                  
+                  {showHint && currentQuestion.hint && (
+                    <div className="hint-box mb-4">
+                      <strong>Hint:</strong> {currentQuestion.hint}
+                    </div>
+                  )}
+                  
+                  <div className="options">
+                    {currentQuestion.options.map((option) => (
+                      <button
+                        key={option.id}
+                        className={`quiz-option mb-2 ${selectedOption === option.id ? 'option-selected' : ''} ${getOptionColor(option)}`}
+                        onClick={() => handleOptionSelect(option.id)}
+                        disabled={selectedOption !== null}
+                      >
+                        {option.text}
+                      </button>
+                    ))}
+                  </div>
+                  
+                  {selectedOption !== null && (
+                    <div className="mt-4 p-4 bg-gray-50 rounded-md">
+                      <p className="font-medium mb-2">
+                        {currentQuestion.options.find(opt => opt.id === selectedOption)?.correct 
+                          ? '✓ Correct!' 
+                          : '✗ Incorrect!'}
+                      </p>
+                      
+                      <p className="correct-answer">
+                        Correct answer: {currentQuestion.correctAnswer}
+                      </p>
+                    </div>
+                  )}
+                </div>
+                
+                <div className="flex justify-between items-center mt-6">
+                  <Button variant="link" size="sm" onClick={toggleHint}>
+                    {showHint ? "Hide Hint" : "Hint"}
+                  </Button>
+                  
+                  <Button onClick={nextQuestion} disabled={selectedOption === null}>
+                    Next Question
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+          
+          <TabsContent value="typed" className="animate-slide-in">
+            <Card className="mt-4">
+              <CardContent className="pt-6">
+                <div className="flex justify-between items-center mb-4">
+                  <div className="text-sm text-gray-500">
+                    {(currentIndex % filteredQuestions.length) + 1} of {filteredQuestions.length}
+                  </div>
+                  <div className="bg-primary-500 text-white px-3 py-1 rounded-full text-sm">
+                    {currentTopicName}
+                  </div>
+                </div>
+                
+                <div className="question mb-6">
+                  <h2 className="text-xl font-medium mb-4">{currentQuestion.question}</h2>
+                  
+                  {showHint && currentQuestion.hint && (
+                    <div className="hint-box mb-4">
+                      <strong>Hint:</strong> {currentQuestion.hint}
+                    </div>
+                  )}
+                  
+                  <form onSubmit={handleSubmitTypedAnswer}>
+                    <div className="mb-4">
+                      <Input
+                        type="text"
+                        placeholder="Type your answer..."
+                        value={userAnswer}
+                        onChange={(e) => setUserAnswer(e.target.value)}
+                        className={getAnswerColor()}
+                        readOnly={showAnswer}
+                      />
+                    </div>
+                    
+                    {!showAnswer && (
+                      <Button type="submit" className="w-full">Check Answer</Button>
+                    )}
+                  </form>
+                  
+                  {showAnswer && (
+                    <div className="mt-4 p-4 bg-gray-50 rounded-md">
+                      <p className="font-medium mb-2">
+                        {userAnswer.toLowerCase() === currentQuestion.correctAnswer.toLowerCase() 
+                          ? '✓ Correct!' 
+                          : '✗ Incorrect!'}
+                      </p>
+                      
+                      <p className="correct-answer">
+                        Correct answer: {currentQuestion.correctAnswer}
+                      </p>
+                    </div>
+                  )}
+                </div>
+                
+                <div className="flex justify-between items-center mt-6">
+                  <Button variant="link" size="sm" onClick={toggleHint}>
+                    {showHint ? "Hide Hint" : "Hint"}
+                  </Button>
+                  
+                  <Button onClick={nextQuestion} disabled={!showAnswer}>
+                    Next Question
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+        </Tabs>
+      </div>
+      
+      <Progress value={progressPercentage} className="mt-6" />
+      <div className="text-xs text-gray-500 text-center mt-1">
+        {Math.round(progressPercentage)}% complete
       </div>
       
       <div className="mt-6">

@@ -79,8 +79,6 @@ export default function FlashcardsPage() {
       ? ((currentIndex % filteredFlashcards.length) + 1) / filteredFlashcards.length * 100 
       : 0;
   
-  // We're now using topics from context
-  
   // Get current topic name for display
   const currentTopicName = selectedTopic === 'all' 
     ? 'All Topics' 
