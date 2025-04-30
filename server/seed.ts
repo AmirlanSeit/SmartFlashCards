@@ -41,14 +41,14 @@ export async function seedDatabase() {
     // Create algebra flashcards
     console.log('Creating algebra flashcards...');
     const algebraFlashcards: InsertFlashcard[] = [
-      { question: "Solve 2x+3=7. x=?", answer: "2", topicId: topicMap.get("Algebra")!, difficulty: "easy" },
-      { question: "Solve x²-9=0. x=?", answer: "±3", topicId: topicMap.get("Algebra")!, difficulty: "medium" },
-      { question: "Factor x²-4x+4", answer: "(x-2)²", topicId: topicMap.get("Algebra")!, difficulty: "medium" },
-      { question: "Solve 2x+3=7. x=?", answer: "2", topicId: topicMap.get("Algebra")!, difficulty: "easy" },
-      { question: "Solve 5x-2=13. x=?", answer: "3", topicId: topicMap.get("Algebra")!, difficulty: "easy" },
-      { question: "Expand (x+3)(x-2)", answer: "x²+x-6", topicId: topicMap.get("Algebra")!, difficulty: "medium" },
-      { question: "Solve x²-4=0. x=?", answer: "±2", topicId: topicMap.get("Algebra")!, difficulty: "medium" },
-      { question: "Factor x²-25", answer: "(x+5)(x-5)", topicId: topicMap.get("Algebra")!, difficulty: "medium" }
+      { question: "Solve 2x+3=7. x=?", answer: "2", topicId: topicMap.get("Algebra")!, difficulty: "easy", hint: "Subtract 3 from both sides, then divide by 2." },
+      { question: "Solve x²-9=0. x=?", answer: "±3", topicId: topicMap.get("Algebra")!, difficulty: "medium", hint: "Factor the equation as (x+3)(x-3)=0." },
+      { question: "Factor x²-4x+4", answer: "(x-2)²", topicId: topicMap.get("Algebra")!, difficulty: "medium", hint: "This is a perfect square trinomial." },
+      { question: "Solve 2x+3=7. x=?", answer: "2", topicId: topicMap.get("Algebra")!, difficulty: "easy", hint: "Isolate the variable by moving constants to the right side." },
+      { question: "Solve 5x-2=13. x=?", answer: "3", topicId: topicMap.get("Algebra")!, difficulty: "easy", hint: "Add 2 to both sides, then divide by 5." },
+      { question: "Expand (x+3)(x-2)", answer: "x²+x-6", topicId: topicMap.get("Algebra")!, difficulty: "medium", hint: "Use the FOIL method: First, Outer, Inner, Last." },
+      { question: "Solve x²-4=0. x=?", answer: "±2", topicId: topicMap.get("Algebra")!, difficulty: "medium", hint: "Factor the equation as (x+2)(x-2)=0." },
+      { question: "Factor x²-25", answer: "(x+5)(x-5)", topicId: topicMap.get("Algebra")!, difficulty: "medium", hint: "This is a difference of squares: a²-b² = (a+b)(a-b)" }
     ];
     
     await db.insert(flashcards).values(algebraFlashcards);
@@ -56,13 +56,13 @@ export async function seedDatabase() {
     // Create trigonometry flashcards
     console.log('Creating trigonometry flashcards...');
     const trigFlashcards: InsertFlashcard[] = [
-      { question: "What is sin(30°)?", answer: "1/2", topicId: topicMap.get("Trigonometry")!, difficulty: "easy" },
-      { question: "What is cos(60°)?", answer: "1/2", topicId: topicMap.get("Trigonometry")!, difficulty: "easy" },
-      { question: "What is tan(45°)?", answer: "1", topicId: topicMap.get("Trigonometry")!, difficulty: "easy" },
-      { question: "What is sec(0°)?", answer: "1", topicId: topicMap.get("Trigonometry")!, difficulty: "medium" },
-      { question: "What is csc(30°)?", answer: "2", topicId: topicMap.get("Trigonometry")!, difficulty: "medium" },
-      { question: "What is cot(45°)?", answer: "1", topicId: topicMap.get("Trigonometry")!, difficulty: "medium" },
-      { question: "sin²θ + cos²θ = ?", answer: "1", topicId: topicMap.get("Trigonometry")!, difficulty: "easy" }
+      { question: "What is sin(30°)?", answer: "1/2", topicId: topicMap.get("Trigonometry")!, difficulty: "easy", hint: "In a 30-60-90 triangle, the side opposite to the 30° angle is half the hypotenuse." },
+      { question: "What is cos(60°)?", answer: "1/2", topicId: topicMap.get("Trigonometry")!, difficulty: "easy", hint: "In a 30-60-90 triangle, the adjacent side to the 60° angle is half the hypotenuse." },
+      { question: "What is tan(45°)?", answer: "1", topicId: topicMap.get("Trigonometry")!, difficulty: "easy", hint: "In a 45-45-90 triangle, the opposite and adjacent sides are equal." },
+      { question: "What is sec(0°)?", answer: "1", topicId: topicMap.get("Trigonometry")!, difficulty: "medium", hint: "Secant is the reciprocal of cosine: sec(θ) = 1/cos(θ)" },
+      { question: "What is csc(30°)?", answer: "2", topicId: topicMap.get("Trigonometry")!, difficulty: "medium", hint: "Cosecant is the reciprocal of sine: csc(θ) = 1/sin(θ)" },
+      { question: "What is cot(45°)?", answer: "1", topicId: topicMap.get("Trigonometry")!, difficulty: "medium", hint: "Cotangent is the reciprocal of tangent: cot(θ) = 1/tan(θ)" },
+      { question: "sin²θ + cos²θ = ?", answer: "1", topicId: topicMap.get("Trigonometry")!, difficulty: "easy", hint: "This is the Pythagorean identity in trigonometry." }
     ];
     
     await db.insert(flashcards).values(trigFlashcards);
@@ -70,12 +70,12 @@ export async function seedDatabase() {
     // Create statistics flashcards
     console.log('Creating statistics flashcards...');
     const statsFlashcards: InsertFlashcard[] = [
-      { question: "Mean of [2,4,6,8] is?", answer: "5", topicId: topicMap.get("Statistics")!, difficulty: "easy" },
-      { question: "Median of [1,3,5,7,9] is?", answer: "5", topicId: topicMap.get("Statistics")!, difficulty: "easy" },
-      { question: "Sample variance formula?", answer: "s² = Σ(x-x̄)²/(n-1)", topicId: topicMap.get("Statistics")!, difficulty: "medium" },
-      { question: "Population variance formula?", answer: "σ² = Σ(x-μ)²/N", topicId: topicMap.get("Statistics")!, difficulty: "medium" },
-      { question: "Standard deviation is?", answer: "Square root of variance", topicId: topicMap.get("Statistics")!, difficulty: "easy" },
-      { question: "Range of [3,7,2,9,5] is?", answer: "7", topicId: topicMap.get("Statistics")!, difficulty: "easy" }
+      { question: "Mean of [2,4,6,8] is?", answer: "5", topicId: topicMap.get("Statistics")!, difficulty: "easy", hint: "Add all numbers and divide by the count of numbers." },
+      { question: "Median of [1,3,5,7,9] is?", answer: "5", topicId: topicMap.get("Statistics")!, difficulty: "easy", hint: "The median is the middle value in an ordered list of numbers." },
+      { question: "Sample variance formula?", answer: "s² = Σ(x-x̄)²/(n-1)", topicId: topicMap.get("Statistics")!, difficulty: "medium", hint: "Sum the squared differences from the mean, then divide by n-1." },
+      { question: "Population variance formula?", answer: "σ² = Σ(x-μ)²/N", topicId: topicMap.get("Statistics")!, difficulty: "medium", hint: "Sum the squared differences from the mean, then divide by N." },
+      { question: "Standard deviation is?", answer: "Square root of variance", topicId: topicMap.get("Statistics")!, difficulty: "easy", hint: "It measures the amount of variation or dispersion in a set of values." },
+      { question: "Range of [3,7,2,9,5] is?", answer: "7", topicId: topicMap.get("Statistics")!, difficulty: "easy", hint: "Range is the difference between the largest and smallest values." }
     ];
     
     await db.insert(flashcards).values(statsFlashcards);
