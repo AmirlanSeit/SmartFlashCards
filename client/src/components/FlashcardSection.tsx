@@ -125,14 +125,14 @@ export function FlashcardSection() {
               <div className="absolute top-3 right-3 px-2 py-1 text-xs font-semibold rounded-full bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-100">
                 {topics.find(t => t.id === currentCard.topicId)?.name || "Math"}
               </div>
-              <div className="absolute bottom-2 text-xs text-gray-400 dark:text-gray-500">
+              <div className="absolute bottom-3 text-xs text-gray-400 dark:text-gray-500 font-normal">
                 Click to flip
               </div>
             </div>
             
             <div className="flip-card-back flex flex-col items-center justify-center p-6 cursor-pointer">
               <div className="text-gray-500 text-sm mb-4 uppercase tracking-wider">Answer</div>
-              <div className="text-xl text-center text-green-600">
+              <div className="text-xl text-center text-green-600 dark:text-green-400 font-semibold">
                 {currentCard.answer}
               </div>
               
@@ -141,7 +141,7 @@ export function FlashcardSection() {
                   <strong>Hint:</strong> {currentCard.hint}
                 </div>
               )}
-              <div className="absolute bottom-2 text-xs text-gray-400 dark:text-gray-500">
+              <div className="absolute bottom-3 text-xs text-gray-400 dark:text-gray-500 font-normal">
                 Click to flip back
               </div>
             </div>
