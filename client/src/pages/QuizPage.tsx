@@ -138,25 +138,25 @@ export default function QuizPage() {
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold mb-4">Math Quiz</h1>
+      <h1 className="text-3xl font-bold mb-4 text-gray-800 dark:text-gray-100 tracking-tight">Math Quiz</h1>
       
       <TopicSelector />
       
-      <div className="mt-6 mb-6">
+      <div className="mt-8 mb-6">
         <Tabs defaultValue={questionType} className="w-full" onValueChange={(val) => setQuestionType(val as 'multiple' | 'typed')}>
-          <TabsList className="grid w-full grid-cols-2">
-            <TabsTrigger value="multiple">Multiple Choice</TabsTrigger>
-            <TabsTrigger value="typed">Typed Answer</TabsTrigger>
+          <TabsList className="grid w-full grid-cols-2 dark:bg-gray-800">
+            <TabsTrigger value="multiple" className="dark:data-[state=active]:bg-gray-700 dark:text-gray-200">Multiple Choice</TabsTrigger>
+            <TabsTrigger value="typed" className="dark:data-[state=active]:bg-gray-700 dark:text-gray-200">Typed Answer</TabsTrigger>
           </TabsList>
           
           <TabsContent value="multiple" className="animate-slide-in">
-            <Card className="mt-4">
+            <Card className="mt-4 dark:bg-gray-900 dark:border-gray-800">
               <CardContent className="pt-6">
-                <div className="flex justify-between items-center mb-4">
-                  <div className="text-sm text-gray-500">
-                    {(currentIndex % filteredQuestions.length) + 1} of {filteredQuestions.length}
+                <div className="flex justify-between items-center mb-6">
+                  <div className="text-sm font-medium text-gray-500 dark:text-gray-400 bg-gray-100 dark:bg-gray-800 px-3 py-1 rounded-full">
+                    Question {(currentIndex % filteredQuestions.length) + 1} of {filteredQuestions.length}
                   </div>
-                  <div className="bg-primary-500 text-white px-3 py-1 rounded-full text-sm">
+                  <div className="bg-primary px-4 py-1.5 rounded-full text-sm font-medium text-primary-foreground shadow-sm">
                     {currentTopicName}
                   </div>
                 </div>

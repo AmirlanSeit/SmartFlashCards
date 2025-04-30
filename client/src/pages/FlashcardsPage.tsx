@@ -105,16 +105,16 @@ export default function FlashcardsPage() {
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold mb-4">Math Flashcards</h1>
+      <h1 className="text-3xl font-bold mb-4 text-gray-800 dark:text-gray-100 tracking-tight">Math Flashcards</h1>
       
       <TopicSelector />
       
-      <div className="my-6">
-        <div className="flex justify-between items-center mb-4">
-          <div className="text-sm text-gray-500">
-            {(currentIndex % filteredFlashcards.length) + 1} of {filteredFlashcards.length}
+      <div className="my-8">
+        <div className="flex justify-between items-center mb-6">
+          <div className="text-sm font-medium text-gray-500 dark:text-gray-400 bg-gray-100 dark:bg-gray-800 px-3 py-1 rounded-full">
+            Card {(currentIndex % filteredFlashcards.length) + 1} of {filteredFlashcards.length}
           </div>
-          <div className="bg-primary-500 text-white px-3 py-1 rounded-full text-sm">
+          <div className="bg-primary px-4 py-1.5 rounded-full text-sm font-medium text-primary-foreground shadow-sm">
             {currentTopicName}
           </div>
         </div>
@@ -146,35 +146,64 @@ export default function FlashcardsPage() {
           </div>
         </div>
         
-        <div className="flex justify-between items-center">
-          <Button variant="outline" onClick={prevCard}>
-            Previous Card
+        <div className="flex justify-between items-center mt-8 gap-4">
+          <Button 
+            variant="outline" 
+            onClick={prevCard}
+            className="px-5 py-6 text-sm font-medium dark:bg-gray-800 dark:hover:bg-gray-700 dark:border-gray-700 flex-1"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mr-2"><path d="m15 18-6-6 6-6"/></svg>
+            Previous
           </Button>
           
-          <Button variant="secondary" onClick={flipCard}>
+          <Button 
+            variant="secondary" 
+            onClick={flipCard}
+            className="px-5 py-6 text-sm font-medium dark:bg-gray-800 dark:hover:bg-gray-700 flex-1"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mr-2"><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><path d="M9 3v18"/></svg>
             Flip Card
           </Button>
           
-          <Button onClick={nextCard}>
-            Next Card
+          <Button 
+            onClick={nextCard}
+            className="px-5 py-6 text-sm font-medium flex-1"
+          >
+            Next
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="ml-2"><path d="m9 18 6-6-6-6"/></svg>
           </Button>
         </div>
         
-        <div className="text-center mt-4">
-          <Button variant="link" size="sm" onClick={toggleHint}>
-            {showHint ? "Hide Hint" : "Hint"}
+        <div className="text-center mt-6">
+          <Button 
+            variant="link" 
+            size="sm" 
+            onClick={toggleHint}
+            className="text-primary dark:text-blue-400 hover:text-primary/80 dark:hover:text-blue-300"
+          >
+            {showHint ? "Hide Hint" : "Show Hint"}
+            {!showHint && (
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="ml-1"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+            )}
           </Button>
         </div>
         
-        <Progress value={progressPercentage} className="mt-6" />
-        <div className="text-xs text-gray-500 text-center mt-1">
+        <Progress value={progressPercentage} className="mt-8 h-2 bg-gray-100 dark:bg-gray-800" />
+        <div className="text-xs text-gray-500 dark:text-gray-400 text-center mt-2 font-medium">
           {Math.round(progressPercentage)}% complete
         </div>
       </div>
       
-      <div className="mt-6">
-        <Button asChild>
-          <Link href="/">Back to Home</Link>
+      <div className="mt-10 flex justify-center">
+        <Button 
+          asChild
+          variant="outline"
+          className="px-5 py-6 text-sm font-medium dark:bg-gray-800 dark:hover:bg-gray-700 dark:border-gray-700"
+        >
+          <Link href="/">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mr-2"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+            Back to Home
+          </Link>
         </Button>
       </div>
     </div>
