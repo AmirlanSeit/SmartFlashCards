@@ -104,9 +104,20 @@ export function FlashcardSection() {
           </div>
         </div>
         
-        <div className={`flip-card mb-4 ${isFlipped ? 'flipped' : ''}`}>
+        <div 
+          className={`flip-card mb-4 ${isFlipped ? 'flipped' : ''}`} 
+          onClick={flipCard}
+          role="button"
+          tabIndex={0}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              flipCard();
+            }
+          }}
+          aria-label="Click to flip the card"
+        >
           <div className="flip-card-inner">
-            <div className="flip-card-front flex flex-col items-center justify-center p-6">
+            <div className="flip-card-front flex flex-col items-center justify-center p-6 cursor-pointer">
               <div className="text-gray-500 text-sm mb-4 uppercase tracking-wider font-medium">Question</div>
               <div className="text-center text-xl">
                 {currentCard.question}
@@ -114,9 +125,12 @@ export function FlashcardSection() {
               <div className="absolute top-3 right-3 px-2 py-1 text-xs font-semibold rounded-full bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-100">
                 {topics.find(t => t.id === currentCard.topicId)?.name || "Math"}
               </div>
+              <div className="absolute bottom-2 text-xs text-gray-400 dark:text-gray-500">
+                Click to flip
+              </div>
             </div>
             
-            <div className="flip-card-back flex flex-col items-center justify-center p-6">
+            <div className="flip-card-back flex flex-col items-center justify-center p-6 cursor-pointer">
               <div className="text-gray-500 text-sm mb-4 uppercase tracking-wider">Answer</div>
               <div className="text-xl text-center text-green-600">
                 {currentCard.answer}
@@ -127,6 +141,9 @@ export function FlashcardSection() {
                   <strong>Hint:</strong> {currentCard.hint}
                 </div>
               )}
+              <div className="absolute bottom-2 text-xs text-gray-400 dark:text-gray-500">
+                Click to flip back
+              </div>
             </div>
           </div>
         </div>
