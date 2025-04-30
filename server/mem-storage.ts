@@ -153,6 +153,8 @@ export class MemStorage implements IStorage {
     const newUser: User = {
       ...user,
       id,
+      displayName: user.displayName || null,
+      avatarUrl: user.avatarUrl || null,
       createdAt: new Date(),
       updatedAt: new Date()
     };
@@ -263,7 +265,12 @@ export class MemStorage implements IStorage {
     const newSession: StudySession = {
       ...sessionData,
       id,
-      startTime: sessionData.startTime || new Date()
+      topicId: sessionData.topicId || null,
+      correctAnswers: sessionData.correctAnswers || 0,
+      cardsStudied: sessionData.cardsStudied || 0,
+      questionsAnswered: sessionData.questionsAnswered || 0,
+      startTime: sessionData.startTime || new Date(),
+      endTime: sessionData.endTime || null
     };
     this.studySessionsMap.set(id, newSession);
     return newSession;
@@ -294,7 +301,8 @@ export class MemStorage implements IStorage {
       const id = this.currentTopicId++;
       const newTopic: Topic = { 
         ...topic, 
-        id, 
+        id,
+        difficulty: topic.difficulty || 'medium',
         createdAt: new Date() 
       };
       this.topics.set(id, newTopic);
@@ -327,6 +335,7 @@ export class MemStorage implements IStorage {
       const newFlashcard: Flashcard = { 
         ...flashcard, 
         id,
+        difficulty: flashcard.difficulty || 'medium',
         createdAt: new Date()
       };
       this.flashcards.set(id, newFlashcard);
@@ -356,6 +365,7 @@ export class MemStorage implements IStorage {
       const newFlashcard: Flashcard = { 
         ...flashcard, 
         id,
+        difficulty: flashcard.difficulty || 'medium',
         createdAt: new Date()
       };
       this.flashcards.set(id, newFlashcard);
@@ -385,6 +395,7 @@ export class MemStorage implements IStorage {
       const newFlashcard: Flashcard = { 
         ...flashcard, 
         id,
+        difficulty: flashcard.difficulty || 'medium',
         createdAt: new Date()
       };
       this.flashcards.set(id, newFlashcard);
