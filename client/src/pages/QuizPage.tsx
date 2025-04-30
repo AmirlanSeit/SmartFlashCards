@@ -162,10 +162,15 @@ export default function QuizPage() {
                 </div>
                 
                 <div className="question mb-6">
-                  <h2 className="text-xl font-medium mb-4">{currentQuestion.question}</h2>
+                  <div className="relative">
+                    <h2 className="text-xl font-medium mb-6 dark:text-gray-100">{currentQuestion.question}</h2>
+                    <div className="absolute top-0 right-0 px-2 py-1 text-xs font-semibold rounded-full bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-100">
+                      {topics.find(t => t.id === currentQuestion.topicId)?.name || "Math"}
+                    </div>
+                  </div>
                   
                   {showHint && currentQuestion.hint && (
-                    <div className="hint-box mb-4">
+                    <div className="hint-box mb-6 p-3 bg-amber-50 dark:bg-amber-950 border border-amber-200 dark:border-amber-900 rounded-md text-amber-800 dark:text-amber-200">
                       <strong>Hint:</strong> {currentQuestion.hint}
                     </div>
                   )}
@@ -184,15 +189,15 @@ export default function QuizPage() {
                   </div>
                   
                   {selectedOption !== null && (
-                    <div className="mt-4 p-4 bg-gray-50 rounded-md">
-                      <p className="font-medium mb-2">
+                    <div className="mt-6 p-4 bg-gray-50 dark:bg-gray-800 rounded-md border border-gray-100 dark:border-gray-700">
+                      <p className="font-medium mb-2 dark:text-gray-200">
                         {currentQuestion.options.find(opt => opt.id === selectedOption)?.correct 
                           ? '✓ Correct!' 
                           : '✗ Incorrect!'}
                       </p>
                       
-                      <p className="correct-answer">
-                        Correct answer: {currentQuestion.correctAnswer}
+                      <p className="correct-answer dark:text-gray-300">
+                        Correct answer: <span className="text-blue-600 dark:text-blue-400 font-medium">{currentQuestion.correctAnswer}</span>
                       </p>
                     </div>
                   )}
@@ -212,22 +217,27 @@ export default function QuizPage() {
           </TabsContent>
           
           <TabsContent value="typed" className="animate-slide-in">
-            <Card className="mt-4">
+            <Card className="mt-4 dark:bg-gray-900 dark:border-gray-800">
               <CardContent className="pt-6">
-                <div className="flex justify-between items-center mb-4">
-                  <div className="text-sm text-gray-500">
-                    {(currentIndex % filteredQuestions.length) + 1} of {filteredQuestions.length}
+                <div className="flex justify-between items-center mb-6">
+                  <div className="text-sm font-medium text-gray-500 dark:text-gray-400 bg-gray-100 dark:bg-gray-800 px-3 py-1 rounded-full">
+                    Question {(currentIndex % filteredQuestions.length) + 1} of {filteredQuestions.length}
                   </div>
-                  <div className="bg-primary-500 text-white px-3 py-1 rounded-full text-sm">
+                  <div className="bg-primary px-4 py-1.5 rounded-full text-sm font-medium text-primary-foreground shadow-sm">
                     {currentTopicName}
                   </div>
                 </div>
                 
                 <div className="question mb-6">
-                  <h2 className="text-xl font-medium mb-4">{currentQuestion.question}</h2>
+                  <div className="relative">
+                    <h2 className="text-xl font-medium mb-6 dark:text-gray-100">{currentQuestion.question}</h2>
+                    <div className="absolute top-0 right-0 px-2 py-1 text-xs font-semibold rounded-full bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-100">
+                      {topics.find(t => t.id === currentQuestion.topicId)?.name || "Math"}
+                    </div>
+                  </div>
                   
                   {showHint && currentQuestion.hint && (
-                    <div className="hint-box mb-4">
+                    <div className="hint-box mb-6 p-3 bg-amber-50 dark:bg-amber-950 border border-amber-200 dark:border-amber-900 rounded-md text-amber-800 dark:text-amber-200">
                       <strong>Hint:</strong> {currentQuestion.hint}
                     </div>
                   )}
@@ -250,15 +260,15 @@ export default function QuizPage() {
                   </form>
                   
                   {showAnswer && (
-                    <div className="mt-4 p-4 bg-gray-50 rounded-md">
-                      <p className="font-medium mb-2">
+                    <div className="mt-6 p-4 bg-gray-50 dark:bg-gray-800 rounded-md border border-gray-100 dark:border-gray-700">
+                      <p className="font-medium mb-2 dark:text-gray-200">
                         {userAnswer.toLowerCase() === currentQuestion.correctAnswer.toLowerCase() 
                           ? '✓ Correct!' 
                           : '✗ Incorrect!'}
                       </p>
                       
-                      <p className="correct-answer">
-                        Correct answer: {currentQuestion.correctAnswer}
+                      <p className="correct-answer dark:text-gray-300">
+                        Correct answer: <span className="text-blue-600 dark:text-blue-400 font-medium">{currentQuestion.correctAnswer}</span>
                       </p>
                     </div>
                   )}
@@ -284,9 +294,16 @@ export default function QuizPage() {
         {Math.round(progressPercentage)}% complete
       </div>
       
-      <div className="mt-6">
-        <Button asChild>
-          <Link href="/">Back to Home</Link>
+      <div className="mt-10 flex justify-center">
+        <Button 
+          asChild
+          variant="outline"
+          className="px-5 py-6 text-sm font-medium dark:bg-gray-800 dark:hover:bg-gray-700 dark:border-gray-700"
+        >
+          <Link href="/">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mr-2"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+            Back to Home
+          </Link>
         </Button>
       </div>
     </div>

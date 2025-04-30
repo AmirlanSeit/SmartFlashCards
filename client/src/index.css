@@ -285,21 +285,43 @@
   cursor: pointer;
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
   font-size: 1rem;
+  background-color: white;
+  color: hsl(var(--foreground));
 }
 
 .dark .quiz-option {
   background-color: hsl(var(--card));
   border: 1px solid hsl(var(--border));
+  color: hsl(var(--card-foreground));
 }
 
-.quiz-option:hover:not(.option-selected) {
+.quiz-option:hover:not([disabled]):not(.option-selected) {
   background-color: rgba(59, 130, 246, 0.05);
   transform: translateY(-1px);
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  border-color: hsl(var(--primary));
 }
 
-.dark .quiz-option:hover:not(.option-selected) {
-  background-color: hsl(var(--accent));
+.dark .quiz-option:hover:not([disabled]):not(.option-selected) {
+  background-color: hsl(var(--secondary));
+  border-color: hsl(var(--primary));
+}
+
+.quiz-option[disabled] {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.dark .option-correct {
+  background-color: rgba(22, 163, 74, 0.2) !important;
+  border-color: rgb(22, 163, 74) !important;
+  color: rgb(134, 239, 172) !important;
+}
+
+.dark .option-incorrect {
+  background-color: rgba(220, 38, 38, 0.2) !important;
+  border-color: rgb(220, 38, 38) !important;
+  color: rgb(252, 165, 165) !important;
 }
 
 .correct-answer {
