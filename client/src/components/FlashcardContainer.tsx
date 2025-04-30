@@ -63,9 +63,10 @@ export function FlashcardContainer() {
   const currentCard = allFlashcards[currentIndex % allFlashcards.length];
   const progressPercentage = ((currentIndex % allFlashcards.length) + 1) / allFlashcards.length * 100;
   
-  const topicName = currentCard?.topicId 
-    ? topics.find(t => t.id === currentCard.topicId)?.name || "Unknown"
-    : "All Topics";
+  // Use the selected topic for displaying the topic name
+  const topicName = selectedTopic === "all" 
+    ? "All Topics" 
+    : topics.find(t => t.slug === selectedTopic)?.name || "Unknown";
 
   const handlePrevCard = () => {
     setIsFlipped(false);
@@ -100,30 +101,30 @@ export function FlashcardContainer() {
         </div>
       </div>
       
-      {/* Flashcard */}
-      <div className="mb-4 border rounded-lg bg-white dark:bg-gray-800 shadow-sm overflow-hidden">
-        {!isFlipped ? (
-          <div className="p-8 flex flex-col items-center min-h-[240px] justify-center">
+      {/* Flashcard with flip animation */}
+      <div className={`flip-card mb-4 ${isFlipped ? 'flipped' : ''}`}>
+        <div className="flip-card-inner border rounded-lg bg-white dark:bg-gray-800 shadow-sm overflow-hidden">
+          <div className="flip-card-front p-8 flex flex-col items-center min-h-[240px] justify-center">
             <div 
               className="text-2xl font-medium text-center"
               dangerouslySetInnerHTML={{ __html: formatMath(currentCard?.question || "") }}
             />
           </div>
-        ) : (
-          <div className="p-8 flex flex-col items-center min-h-[240px] justify-center">
+          
+          <div className="flip-card-back p-8 flex flex-col items-center min-h-[240px] justify-center">
             <h3 className="text-lg text-gray-500 dark:text-gray-400 mb-4">Answer</h3>
             <div 
               className="text-2xl font-medium text-center text-green-500"
               dangerouslySetInnerHTML={{ __html: formatMath(currentCard?.answer || "") }}
             />
             
-            {showHint && currentCard.hint && (
-              <div className="hint-box mt-4 w-full">
-                <strong>Hint:</strong> {currentCard.hint}
+            {showHint && (
+              <div className="hint-box mt-4 w-full animate-fade-in">
+                <strong>Hint:</strong> {currentCard.hint || "Try breaking down the problem into simpler steps."}
               </div>
             )}
           </div>
-        )}
+        </div>
       </div>
       
       {/* Navigation */}

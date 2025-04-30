@@ -19,6 +19,7 @@ export const flashcards = pgTable("flashcards", {
   answer: text("answer").notNull(),
   topicId: integer("topic_id").references(() => topics.id).notNull(),
   difficulty: text("difficulty").default("medium").notNull(),
+  hint: text("hint"),
   createdAt: timestamp("created_at").defaultNow().notNull()
 });
 
@@ -30,6 +31,7 @@ export const quizQuestions = pgTable("quiz_questions", {
   options: jsonb("options").notNull(),
   topicId: integer("topic_id").references(() => topics.id).notNull(),
   difficulty: text("difficulty").default("medium").notNull(),
+  hint: text("hint"),
   createdAt: timestamp("created_at").defaultNow().notNull()
 });
 
@@ -224,6 +226,7 @@ export const quizQuestionSchema = z.object({
   })),
   topicId: z.number(),
   difficulty: z.string().optional().default("medium"),
+  hint: z.string().optional(),
   createdAt: z.date().optional()
 });
 

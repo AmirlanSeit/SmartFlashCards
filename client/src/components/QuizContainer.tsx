@@ -121,8 +121,8 @@ export function QuizContainer() {
         </div>
       </div>
       
-      {/* Question Card */}
-      <div className="mb-4 border rounded-lg bg-white dark:bg-gray-800 shadow-sm overflow-hidden p-6">
+      {/* Question Card with slide-in animation */}
+      <div className="mb-4 border rounded-lg bg-white dark:bg-gray-800 shadow-sm overflow-hidden p-6 animate-slide-in">
         <h3 className="text-lg text-gray-500 dark:text-gray-400 mb-4">Question:</h3>
         <div 
           className="text-xl font-medium text-center mb-8"
@@ -192,8 +192,8 @@ export function QuizContainer() {
 
         {/* Hint box */}
         {showHint && (
-          <div className="hint-box mt-4">
-            <strong>Hint:</strong> In a 30-60-90 triangle, the side opposite to the 30° angle is half the hypotenuse.
+          <div className="hint-box mt-4 animate-fade-in">
+            <strong>Hint:</strong> {currentQuestion.hint || "Try breaking down the problem into simpler steps."}
           </div>
         )}
       </div>
