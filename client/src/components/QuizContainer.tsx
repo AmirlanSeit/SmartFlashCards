@@ -1,23 +1,20 @@
 import { useContext, useState, useEffect, FormEvent } from "react";
 import { AppContext } from "@/context/AppContext";
-import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Input } from "@/components/ui/input";
-import { useToast } from "@/hooks/use-toast";
 import { useQuery } from "@tanstack/react-query";
 import { Topic, QuizQuestionWithOptions } from "@shared/schema";
 import { formatMath } from "@/lib/math-formatter";
 
 export function QuizContainer() {
   const { selectedTopic, currentMode, questionType } = useContext(AppContext);
-  const { toast } = useToast();
   
   const [currentIndex, setCurrentIndex] = useState(0);
   const [userAnswer, setUserAnswer] = useState("");
   const [showAnswer, setShowAnswer] = useState(false);
   const [allQuestions, setAllQuestions] = useState<QuizQuestionWithOptions[]>([]);
   const [selectedOption, setSelectedOption] = useState<string | null>(null);
+  const [showHint, setShowHint] = useState(false);
 
   const { data: quizQuestions = [], isLoading: isLoadingQuestions } = useQuery<QuizQuestionWithOptions[]>({
     queryKey: ["/api/quiz"],
@@ -44,6 +41,7 @@ export function QuizContainer() {
     setUserAnswer("");
     setShowAnswer(false);
     setSelectedOption(null);
+    setShowHint(false);
   }, [selectedTopic, quizQuestions, topics]);
 
   if (currentMode !== "quiz") {
@@ -61,9 +59,9 @@ export function QuizContainer() {
 
   if (allQuestions.length === 0) {
     return (
-      <Card className="p-6 text-center">
+      <div className="p-6 text-center border rounded-lg shadow-sm">
         <p className="text-lg mb-4">No quiz questions available for this topic.</p>
-      </Card>
+      </div>
     );
   }
 
@@ -79,68 +77,36 @@ export function QuizContainer() {
     setUserAnswer("");
     setShowAnswer(false);
     setSelectedOption(null);
+    setShowHint(false);
   };
 
-  const handleShowHint = () => {
-    toast({
-      title: "Hint",
-      description: "Think about the topic principles and formulas you've learned.",
-      duration: 5000,
-    });
+  const toggleHint = () => {
+    setShowHint(prev => !prev);
   };
 
   const handleAnswerSubmit = (e: FormEvent) => {
     e.preventDefault();
     if (!userAnswer.trim()) {
-      toast({
-        title: "Empty Answer",
-        description: "Please type your answer before submitting.",
-        variant: "destructive",
-      });
       return;
     }
     
     // Check if answer is correct (case insensitive)
-    const isCorrect = userAnswer.toLowerCase() === currentQuestion.correctAnswer.toLowerCase();
-    
-    if (isCorrect) {
-      toast({
-        title: "Correct!",
-        description: "Your answer is correct.",
-        variant: "default",
-      });
-    } else {
-      toast({
-        title: "Incorrect",
-        description: `The correct answer is: ${currentQuestion.correctAnswer}`,
-        variant: "destructive",
-      });
-    }
-    
     setShowAnswer(true);
   };
 
   const handleOptionSelect = (optionId: string) => {
+    if (selectedOption !== null) return;
     setSelectedOption(optionId);
-    
-    // Find if the selected option is correct
-    const selectedOptionObj = currentQuestion.options.find(opt => opt.id === optionId);
-    
-    if (selectedOptionObj?.correct) {
-      toast({
-        title: "Correct!",
-        description: "You selected the right answer.",
-        variant: "default",
-      });
-    } else {
-      // Find the correct option
-      const correctOption = currentQuestion.options.find(opt => opt.correct);
-      toast({
-        title: "Incorrect",
-        description: `The correct answer is: ${correctOption?.text}`,
-        variant: "destructive",
-      });
-    }
+  };
+
+  // Find if the selected option is correct
+  const isOptionCorrect = (optionId: string) => {
+    return currentQuestion.options.find(opt => opt.id === optionId)?.correct;
+  };
+  
+  // Get the correct option
+  const getCorrectOption = () => {
+    return currentQuestion.options.find(opt => opt.correct);
   };
 
   return (
@@ -149,13 +115,13 @@ export function QuizContainer() {
         <div className="text-sm text-gray-600 dark:text-gray-400">
           {currentIndex % allQuestions.length + 1} of {allQuestions.length} cards
         </div>
-        <div className="px-3 py-1 bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-100 rounded-full text-xs font-medium">
+        <div className="topic-label">
           {topicName}
         </div>
       </div>
       
       {/* Question Card */}
-      <Card className="p-6 mb-4 animate-fade-in">
+      <div className="mb-4 border rounded-lg bg-white dark:bg-gray-800 shadow-sm overflow-hidden p-6">
         <h3 className="text-lg text-gray-500 dark:text-gray-400 mb-4">Question:</h3>
         <div 
           className="text-xl font-medium text-center mb-8"
@@ -166,30 +132,25 @@ export function QuizContainer() {
         {questionType === "multiple" && (
           <div className="space-y-3">
             {currentQuestion.options.map((option) => (
-              <Button
+              <button
                 key={option.id}
-                variant="outline"
-                className={`w-full text-left justify-start px-4 py-3 h-auto ${
+                className={`quiz-option ${
                   selectedOption === option.id
                     ? option.correct
-                      ? "bg-green-100 dark:bg-green-900 border-green-500"
-                      : "bg-red-100 dark:bg-red-900 border-red-500"
+                      ? "option-correct"
+                      : "option-incorrect"
                     : ""
                 } ${
-                  selectedOption !== null && option.correct
-                    ? "bg-green-100 dark:bg-green-900 border-green-500"
+                  selectedOption !== null && option.correct && selectedOption !== option.id
+                    ? "option-correct"
                     : ""
                 }`}
-                onClick={() => {
-                  if (selectedOption === null) {
-                    handleOptionSelect(option.id);
-                  }
-                }}
+                onClick={() => handleOptionSelect(option.id)}
                 disabled={selectedOption !== null}
               >
                 <span className="font-medium mr-3">{option.id}</span>
                 <span dangerouslySetInnerHTML={{ __html: formatMath(option.text) }} />
-              </Button>
+              </button>
             ))}
           </div>
         )}
@@ -218,34 +179,49 @@ export function QuizContainer() {
               </div>
             )}
             
-            <Button
+            <button
               type="submit"
-              className="w-full py-3"
+              className="w-full py-2 bg-primary text-white rounded-md hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed"
               disabled={showAnswer || !userAnswer.trim()}
             >
               Submit Answer
-            </Button>
+            </button>
           </form>
         )}
-      </Card>
+
+        {/* Hint box */}
+        {showHint && (
+          <div className="hint-box mt-4">
+            <strong>Hint:</strong> In a 30-60-90 triangle, the side opposite to the 30° angle is half the hypotenuse.
+          </div>
+        )}
+      </div>
       
       {/* Hint and Navigation */}
       <div className="flex justify-between items-center">
-        <Button variant="ghost" onClick={handleShowHint}>
-          Hint
-        </Button>
-        <Button 
-          variant="default" 
+        <button 
+          className="px-4 py-2 border rounded-md text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700"
+          onClick={toggleHint}
+        >
+          {showHint ? "Hide Hint" : "Hint"}
+        </button>
+        
+        <button 
+          className="px-4 py-2 bg-primary text-white rounded-md hover:bg-primary/90"
           onClick={handleNextQuestion}
-          className="bg-primary hover:bg-primary/90"
         >
           Next Question
-        </Button>
+        </button>
       </div>
       
       {/* Progress bar */}
       <div className="mt-6">
-        <Progress value={progressPercentage} className="h-2" />
+        <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2 overflow-hidden">
+          <div 
+            className="bg-blue-600 h-full rounded-full" 
+            style={{ width: `${progressPercentage}%` }}
+          ></div>
+        </div>
         <div className="text-xs text-gray-500 dark:text-gray-400 text-center mt-1">
           {Math.round(progressPercentage)}% complete
         </div>

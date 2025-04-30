@@ -1,6 +1,5 @@
 import { useContext } from "react";
 import { AppContext } from "@/context/AppContext";
-import { Button } from "@/components/ui/button";
 import { ListChecks, Type } from "lucide-react";
 
 export function QuestionTypeToggle() {
@@ -13,22 +12,20 @@ export function QuestionTypeToggle() {
   return (
     <section className="flex justify-center mb-6">
       <div className="inline-flex bg-gray-100 dark:bg-gray-800 p-1 rounded-lg">
-        <Button
-          variant={questionType === "multiple" ? "secondary" : "ghost"}
-          className="flex items-center px-4 py-2 rounded-md text-sm font-medium"
+        <button
+          className={`mode-btn ${questionType === "multiple" ? "mode-btn-active" : ""}`}
           onClick={() => setQuestionType("multiple")}
         >
           <ListChecks className="h-4 w-4 mr-2" />
           Multiple Choice
-        </Button>
-        <Button
-          variant={questionType === "typed" ? "secondary" : "ghost"}
-          className="flex items-center px-4 py-2 rounded-md text-sm font-medium"
+        </button>
+        <button
+          className={`mode-btn ${questionType === "typed" ? "mode-btn-active" : ""}`}
           onClick={() => setQuestionType("typed")}
         >
           <Type className="h-4 w-4 mr-2" />
           Type Answer
-        </Button>
+        </button>
       </div>
     </section>
   );

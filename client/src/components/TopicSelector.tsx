@@ -1,6 +1,5 @@
 import { useContext } from "react";
 import { AppContext } from "@/context/AppContext";
-import { Button } from "@/components/ui/button";
 import { Topic } from "@shared/schema";
 import { useQuery } from "@tanstack/react-query";
 
@@ -14,11 +13,11 @@ export function TopicSelector() {
   if (isLoading) {
     return (
       <section className="mb-6">
-        <h2 className="text-lg font-medium mb-3 text-gray-700 dark:text-gray-300">Select Topic</h2>
+        <h2 className="text-xl font-semibold mb-3 text-gray-800 dark:text-gray-200">Select Math Topic</h2>
         <div className="flex flex-wrap gap-2">
-          <Button className="px-4 py-2 rounded-full text-sm font-medium" disabled>
+          <button className="topic-btn px-5 py-2 text-sm" disabled>
             Loading topics...
-          </Button>
+          </button>
         </div>
       </section>
     );
@@ -26,25 +25,23 @@ export function TopicSelector() {
 
   return (
     <section className="mb-6">
-      <h2 className="text-lg font-medium mb-3 text-gray-700 dark:text-gray-300">Select Topic</h2>
+      <h2 className="text-xl font-semibold mb-3 text-gray-800 dark:text-gray-200">Select Math Topic</h2>
       <div className="flex flex-wrap gap-2">
-        <Button 
-          variant={selectedTopic === "all" ? "default" : "outline"}
-          className="px-4 py-2 rounded-full text-sm font-medium"
+        <button 
+          className={`topic-btn px-5 py-2 text-sm ${selectedTopic === "all" ? "topic-btn-active" : ""}`}
           onClick={() => setSelectedTopic("all")}
         >
           All Topics
-        </Button>
+        </button>
 
         {topics.map((topic) => (
-          <Button
+          <button
             key={topic.id}
-            variant={selectedTopic === topic.slug ? "default" : "outline"}
-            className="px-4 py-2 rounded-full text-sm font-medium"
+            className={`topic-btn px-5 py-2 text-sm ${selectedTopic === topic.slug ? "topic-btn-active" : ""}`}
             onClick={() => setSelectedTopic(topic.slug)}
           >
             {topic.name}
-          </Button>
+          </button>
         ))}
       </div>
     </section>

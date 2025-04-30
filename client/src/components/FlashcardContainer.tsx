@@ -1,7 +1,5 @@
 import { useContext, useState, useEffect } from "react";
 import { AppContext } from "@/context/AppContext";
-import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { useQuery } from "@tanstack/react-query";
 import { Flashcard, Topic } from "@shared/schema";
@@ -12,6 +10,7 @@ export function FlashcardContainer() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isFlipped, setIsFlipped] = useState(false);
   const [allFlashcards, setAllFlashcards] = useState<Flashcard[]>([]);
+  const [showHint, setShowHint] = useState(false);
 
   const { data: flashcards = [], isLoading: isLoadingFlashcards } = useQuery<Flashcard[]>({
     queryKey: ["/api/flashcards"],
@@ -36,6 +35,7 @@ export function FlashcardContainer() {
     // Reset index and flip state when topic changes
     setCurrentIndex(0);
     setIsFlipped(false);
+    setShowHint(false);
   }, [selectedTopic, flashcards, topics]);
 
   if (currentMode !== "flashcards") {
@@ -53,9 +53,9 @@ export function FlashcardContainer() {
 
   if (allFlashcards.length === 0) {
     return (
-      <Card className="p-6 text-center">
+      <div className="p-6 text-center border rounded-lg shadow-sm">
         <p className="text-lg mb-4">No flashcards available for this topic.</p>
-      </Card>
+      </div>
     );
   }
 
@@ -68,6 +68,7 @@ export function FlashcardContainer() {
 
   const handlePrevCard = () => {
     setIsFlipped(false);
+    setShowHint(false);
     setCurrentIndex(prev => 
       prev > 0 ? prev - 1 : allFlashcards.length - 1
     );
@@ -75,6 +76,7 @@ export function FlashcardContainer() {
 
   const handleNextCard = () => {
     setIsFlipped(false);
+    setShowHint(false);
     setCurrentIndex(prev => prev + 1);
   };
 
@@ -82,72 +84,89 @@ export function FlashcardContainer() {
     setIsFlipped(prev => !prev);
   };
 
+  const toggleHint = () => {
+    setShowHint(prev => !prev);
+  };
+
   return (
     <section className="mb-6">
       <div className="flex justify-between items-center mb-4">
         <div className="text-sm text-gray-600 dark:text-gray-400">
-          {currentIndex % allFlashcards.length + 1} of {allFlashcards.length} cards
+          {currentIndex % allFlashcards.length + 1} of {allFlashcards.length}
         </div>
-        <div className="px-3 py-1 bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-100 rounded-full text-xs font-medium">
+        <div className="topic-label">
           {topicName}
         </div>
       </div>
       
       {/* Flashcard */}
-      <div 
-        className={`flip-card w-full h-[300px] bg-transparent cursor-pointer mb-4 ${isFlipped ? 'flipped' : ''}`}
-        onClick={handleFlipCard}
-      >
-        <div className="flip-card-inner relative w-full h-full">
-          {/* Front */}
-          <div className="flip-card-front rounded-xl bg-white dark:bg-card shadow-md p-6 flex flex-col items-center justify-center">
-            <h3 className="text-lg text-gray-500 dark:text-gray-400 mb-4">Question</h3>
+      <div className="mb-4 border rounded-lg bg-white dark:bg-gray-800 shadow-sm overflow-hidden">
+        {!isFlipped ? (
+          <div className="p-8 flex flex-col items-center min-h-[240px] justify-center">
             <div 
               className="text-2xl font-medium text-center"
               dangerouslySetInnerHTML={{ __html: formatMath(currentCard?.question || "") }}
             />
-            <div className="mt-8 text-sm text-gray-400">Click to flip card</div>
           </div>
-          
-          {/* Back */}
-          <div className="flip-card-back rounded-xl bg-white dark:bg-card shadow-md p-6 flex flex-col items-center justify-center">
+        ) : (
+          <div className="p-8 flex flex-col items-center min-h-[240px] justify-center">
             <h3 className="text-lg text-gray-500 dark:text-gray-400 mb-4">Answer</h3>
             <div 
-              className="text-2xl font-medium text-center"
+              className="text-2xl font-medium text-center text-green-500"
               dangerouslySetInnerHTML={{ __html: formatMath(currentCard?.answer || "") }}
             />
+            
+            {showHint && (
+              <div className="hint-box mt-4 w-full">
+                <strong>Hint:</strong> In a 30-60-90 triangle, the side opposite to the 30° angle is half the hypotenuse.
+              </div>
+            )}
           </div>
-        </div>
+        )}
       </div>
       
       {/* Navigation */}
       <div className="flex justify-between items-center">
-        <Button 
-          variant="ghost" 
+        <button 
+          className="px-4 py-2 border rounded-md text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700"
           onClick={handlePrevCard}
-          className="px-4 py-2"
         >
           Previous Card
-        </Button>
-        <Button 
-          variant="secondary" 
+        </button>
+        
+        <button 
+          className="px-4 py-2 bg-gray-100 dark:bg-gray-700 rounded-md text-gray-800 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-600"
           onClick={handleFlipCard}
-          className="px-4 py-2"
         >
           Flip Card
-        </Button>
-        <Button 
-          variant="default" 
+        </button>
+        
+        <button 
+          className="px-4 py-2 bg-primary text-white rounded-md hover:bg-primary/90"
           onClick={handleNextCard}
-          className="px-4 py-2"
         >
           Next Card
-        </Button>
+        </button>
+      </div>
+      
+      {/* Hint button */}
+      <div className="mt-4 flex justify-center">
+        <button 
+          className="text-sm text-blue-600 dark:text-blue-400 hover:underline"
+          onClick={toggleHint}
+        >
+          {showHint ? "Hide Hint" : "Hint"}
+        </button>
       </div>
       
       {/* Progress bar */}
       <div className="mt-6">
-        <Progress value={progressPercentage} className="h-2" />
+        <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2 overflow-hidden">
+          <div 
+            className="bg-blue-600 h-full rounded-full" 
+            style={{ width: `${progressPercentage}%` }}
+          ></div>
+        </div>
         <div className="text-xs text-gray-500 dark:text-gray-400 text-center mt-1">
           {Math.round(progressPercentage)}% complete
         </div>
