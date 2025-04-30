@@ -95,11 +95,11 @@ export default function QuizPage() {
     if (selectedOption === null) return '';
     
     if (option.id === selectedOption) {
-      return option.correct ? 'bg-green-100 border-green-500' : 'bg-red-100 border-red-500';
+      return option.correct ? 'option-correct' : 'option-incorrect';
     }
     
     if (option.correct && selectedOption !== null) {
-      return 'bg-green-100 border-green-500';
+      return 'option-correct';
     }
     
     return '';
@@ -110,8 +110,8 @@ export default function QuizPage() {
     if (!showAnswer) return '';
     
     return userAnswer.toLowerCase() === currentQuestion?.correctAnswer.toLowerCase()
-      ? 'border-green-500 text-green-600'
-      : 'border-red-500 text-red-600';
+      ? 'option-correct'
+      : 'option-incorrect';
   };
   
   // Get current topic name for display
